@@ -1,0 +1,40 @@
+{% load censor_filter %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Список новостей</title>
+</head>
+<body>
+    <h1>Список новостей</h1>
+    <ul>
+        {% for news_item in news_list %}
+            <li>
+                <h2>{{ news_item.title|censor }}</h2>
+                <p>{{ news_item.date_published }}</p>
+                <p>{{ news_item.text|truncatechars:20|censor }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
+
+{% extends "default.html" %}
+{% load censor_filter %}
+
+{% block title %}Список новостей{% endblock %}
+
+{% block content %}
+    <h1>Список новостей</h1>
+    <ul>
+        {% for news_item in news_list %}
+            <li>
+                <h2>{{ news_item.title|censor }}</h2>
+                <p>{{ news_item.date_published }}</p>
+                <p>{{ news_item.text|truncatechars:20|censor }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

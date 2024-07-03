@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/News_Portal/.gitattributes" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/News_Portal/flatpages/about.html" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/News_Portal/flatpages/contact_page.html" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/News_Portal/flatpages/db.sqlite3" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/News_Portal/flatpages/default.html" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/News_Portal/flatpages/inc.html" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/News_Portal/project" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/News_Portal/templates" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/../PythonProject_Dir/project/db.sqlite3" charset="windows-1251" />
   </component>
 </project>
