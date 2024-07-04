@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'appointments',
+    'simpleapp',
 ]
 
 SITE_ID = 1

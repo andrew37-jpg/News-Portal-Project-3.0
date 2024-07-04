@@ -178,3 +178,86 @@ def send_mail_for_sub(instance):
     print('Представления - конец')
 
     return redirect('/news/')
+
+from django.views.generic import ListView, DetailView
+from .models import Product
+from .filters import ProductFilter
+
+
+class ProductsList(ListView):
+   model = Product
+   ordering = 'name'
+   template_name = 'products.html'
+   context_object_name = 'products'
+   paginate_by = 2
+
+   # Переопределяем функцию получения списка товаров
+   def get_queryset(self):
+       # Получаем обычный запрос
+       queryset = super().get_queryset()
+       # Используем наш класс фильтрации.
+       # self.request.GET содержит объект QueryDict, который мы рассматривали
+       # в этом юните ранее.
+       # Сохраняем нашу фильтрацию в объекте класса,
+       # чтобы потом добавить в контекст и использовать в шаблоне.
+       self.filterset = ProductFilter(self.request.GET, queryset)
+       # Возвращаем из функции отфильтрованный список товаров
+       return self.filterset.qs
+
+   def get_context_data(self, **kwargs):
+       context = super().get_context_data(**kwargs)
+       # Добавляем в контекст объект фильтрации.
+       context['filterset'] = self.filterset
+       return context
+
+
+class ProductDetail(DetailView):
+   model = Product
+   template_name = 'product.html'
+   context_object_name = 'product'
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.core.paginator import Paginator
+from .models import NewsArticle
+from .forms import NewsArticleForm
+from .filters import NewsArticleFilter
+
+def news_list(request):
+    news_articles = NewsArticle.objects.all().order_by('-pub_date')
+    filter = NewsArticleFilter(request.GET, queryset=news_articles)
+    paginator = Paginator(filter.qs, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'news/news_list.html', {'page_obj': page_obj, 'filter': filter})
+
+def news_search(request):
+    filter = NewsArticleFilter(request.GET, queryset=NewsArticle.objects.all())
+    return render(request, 'news/news_search.html', {'filter': filter})
+
+def news_create(request):
+    if request.method == 'POST':
+        form = NewsArticleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('news_list')
+    else:
+        form = NewsArticleForm()
+    return render(request, 'news/news_form.html', {'form': form})
+
+def news_edit(request, pk):
+    news_article = get_object_or_404(NewsArticle, pk=pk)
+    if request.method == 'POST':
+        form = NewsArticleForm(request.POST, instance=news_article)
+        if form.is_valid():
+            form.save()
+            return redirect('news_list')
+    else:
+        form = NewsArticleForm(instance=news_article)
+    return render(request, 'news/news_form.html', {'form': form})
+
+def news_delete(request, pk):
+    news_article = get_object_or_404(NewsArticle, pk=pk)
+    if request.method == 'POST':
+        news_article.delete()
+        return redirect('news_list')
+    return render(request, 'news/news_confirm_delete.html', {'object': news_article})
